@@ -98,10 +98,10 @@ void menu() {
 
     switch (opcion) {
         case 1: 
-            inicializar_tab(&tablero, tam); 
+            inicializar_tab(tablero, tam); 
         break;
         case 2: 
-            mostrar_tab(&tablero, tam);    
+            mostrar_tab(tablero, tam);    
         break;
         case 3:   
             realizar_disparo(); 
@@ -115,7 +115,14 @@ int main() {
 
     nombres();
 
-    inicializar_tab(&tablero, tam);
+    printf("Ingrese el tamanio del tablero: ");
+    scanf("%d", &tam);
+
+    tablero = malloc(tam * sizeof(char*));
+    for (int i = 0; i < tam; i++)
+        tablero[i] = malloc(tam * sizeof(char));
+
+    inicializar_tab(tablero, tam);
     do {
         menu();
     } while (disparos != 10 && hundido != 1);
@@ -128,5 +135,9 @@ int main() {
     }
 
     mostrar_tab(tablero, tam);
+
+    for (int i = 0; i < tam; i++)
+        free(tablero[i]);
+    free(tablero);
     return 0;
 }
