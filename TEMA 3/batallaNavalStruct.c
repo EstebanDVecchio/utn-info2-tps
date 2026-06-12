@@ -38,7 +38,7 @@ void mostrar_mejor(Juego *juego) {
         printf("Sin record aun\n");
         return;
     }
-      void  stuc
+    
     int mejor = 0;
     for (int k = 1; k < juego->ranking_count; k++) {
         if (juego->ranking[k].disparos < juego->ranking[mejor].disparos)
