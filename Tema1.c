@@ -51,8 +51,23 @@ void mostrarTablero(char tablero [5][5]){
         printf("\n");
     }
 }
-void disparo(int disparo){
+void realizarDisparo(char tablero[5][5]){
+    int fila, columna;
+    printf("Ingresar fila: ");
+    scanf("%d", &fila);
+    printf("Ingresar columna: ");
+    scanf("%d", &columna);
 
+    if(tablero[fila][columna] == 'X' || tablero[fila][columna] == 'A'){
+        printf("Coordenada ya atacada\n");       
+
+    }else if(tablero[fila][columna]){
+        printf("Destruido\n");
+        tablero[fila][columna] == 'B';
+    }else{
+        printf("Agua\n");
+        tablero[fila][columna] = 'A';
+    }
 }
 
 int main(){
@@ -61,9 +76,46 @@ int main(){
     
     char tablero[5][5];
     char barco = 'B';
+    int opcion;
     int disparo = 0;
-    rellenarTablero(tablero);
-    ubicacionBarco(tablero, barco);
-    mostrarTablero(tablero);
+    do{
+    printf("\n------MENU------\n");
+    
+    printf("1. Inicializar el juego\n");
+    printf("2. Mostrar tablero\n");
+    printf("3. Realizar disparo\n");
+    printf("4. Salir\n");
+
+    printf("Elija una opcion: ");
+
+    scanf("%d",&opcion);
+    
+    switch (opcion){
+    case 1:
+        rellenarTablero(tablero);
+        ubicacionBarco(tablero, barco);
+        break;
+    case 2:
+        mostrarTablero(tablero);
+        break;
+    case 3:
+        realizarDisparo(tablero);
+        disparo++;
+        printf("Disparos:%d", disparo);
+
+        if(disparo == 10){
+            printf("\nAlcanzaste el limite\n");
+        
+        }
+
+        break;
+    
+    default:
+        break;
+    }
+
+    }while (opcion!=4);
+
     return 0;
+    
 }
