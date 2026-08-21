@@ -34,7 +34,7 @@ void agregar_ranking(Juego *juego) {
 }
 
 void mostrar_mejor(Juego *juego) {
-    if (juego->ranking_count == ) {
+    if (juego->ranking_count == 0) {
         printf("Sin record aun\n");
         return;
     }
