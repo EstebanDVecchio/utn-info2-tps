@@ -74,6 +74,11 @@ void ranking(record *mejorJugador, record *jugadorActual ){
     
         mejorJugador->disparos = jugadorActual->disparos;
         strcpy(mejorJugador->nombre, jugadorActual->nombre);
+
+        time_t tiempoActual;
+        time(&tiempoActual);
+        struct tm *infoTiempo = localtime(&tiempoActual);
+        strftime(mejorJugador->fechaRecord, sizeof(mejorJugador->fechaRecord), "%d/%m/%Y %H:%M", infoTiempo);
     
         printf("\nHas superado el record\n");
     }
@@ -102,8 +107,7 @@ void mostrarRanking(record *mejorJugador){
     }
 }
 
-void guardarHistorialDitorial de disparos para %s\n", jugadorActual->nombre);
-        return;sparo(record *jugadorActual, disparo *disparo){
+void guardarHistorialDisparo(record *jugadorActual, disparo *disparo){
     char nombreArchivo[100];
     snprintf(nombreArchivo, sizeof(nombreArchivo), "disparos_%s.txt", jugadorActual->nombre);
 
@@ -113,8 +117,7 @@ void guardarHistorialDitorial de disparos para %s\n", jugadorActual->nombre);
         return;
     }
 
-    fprintf(archivo, "%d,%dtorial de disparos para %s\n", jugadorActual->nombre);
-        return;,%s\n", disparo->fila, disparo->columna, disparo->resultado);
+    fprintf(archivo, "%d,%d,%s\n", disparo->fila, disparo->columna, disparo->resultado);
     fclose(archivo);
 }
 
@@ -185,6 +188,7 @@ void cargarJuego(juego *juego, record *jugadorActual){
     char linea[100];
     fgets(linea, sizeof(linea), archivo);
     linea[strcspn(linea, "\n")] = '\0';
+    strcpy(jugadorActual->nombre, linea);
 
     fscanf(archivo, "%d\n", &juego->tamano);
     fscanf(archivo, "%d\n", &jugadorActual->disparos);
@@ -241,6 +245,12 @@ void realizarDisparo(juego *juego, disparo *disparo, record *jugadorActual){
     printf("En que columna: ");
     scanf("%d", &disparo->columna);
 
+    if(disparo->fila < 0 || disparo->fila >= juego->tamano ||
+       disparo->columna < 0 || disparo->columna >= juego->tamano){
+        printf("Coordenadas invalidas\n");
+        return;
+    }
+
     if(juego->tablero[disparo->fila][disparo->columna] == 'B'){
         strcpy(disparo->resultado, "hundido");
         printf("Destruiste el barco\n");
@@ -259,7 +269,9 @@ void realizarDisparo(juego *juego, disparo *disparo, record *jugadorActual){
         jugadorActual->disparos++;
     }
 
-    guardarHistorialDisparo(jugadorActual, disparo);
+    if(strcmp(disparo->resultado, "repetido") != 0){
+        guardarHistorialDisparo(jugadorActual, disparo);
+    }
     printf("Disparo en (%d,%d) -> %s\n", disparo->fila, disparo->columna, disparo->resultado);
     printf("Disparos: %d\n", jugadorActual->disparos);
 
@@ -270,7 +282,7 @@ void menu(juego *juego, disparo *disparo, record *mejorJugador, record *jugadorA
     
     do{ 
         printf("\n=====MENU=====\n");
-        
+        mostrarRanking(mejorJugador);
         printf("1. Inicializar tablero\n");
         printf("2. Mostrar tablero\n");
         printf("3. Realizar disparo\n");
@@ -294,18 +306,20 @@ void menu(juego *juego, disparo *disparo, record *mejorJugador, record *jugadorA
         case 3:
             while(jugadorActual->disparos < 10){
                 realizarDisparo(juego, disparo, jugadorActual);
-                if(juego->tablero[disparo->fila][disparo->columna] == 'X'){
-                    printf("\nGanaste!\n");
+                if(strcmp(disparo->resultado, "hundido") == 0){
+                    printf("\n========= GANASTE! =========\n");
                     ranking(mejorJugador, jugadorActual);
                     guardarPartida(jugadorActual);
                     break;
                 }
             }if(jugadorActual->disparos >= 10){
-                printf("\nTe quedaste sin disparos\n");
+                printf("\n========= PERDISTE =========\n");
+                printf("Te quedaste sin disparos\n");
                 ranking(mejorJugador, jugadorActual);
                 mostrarTablero(juego);
                 guardarPartida(jugadorActual);
             }
+            printf("Partida finalizada. Elija otra opcion o salga.\n");
             break;
         case 4:
             mostrarRanking(mejorJugador);
