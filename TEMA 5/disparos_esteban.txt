@@ -1,0 +1,8 @@
+0,1,hundido
+1,2,agua
+2,1,agua
+0,1,agua
+0,0,agua
+2,2,agua
+1,1,hundido
+1,1,agua
