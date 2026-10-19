@@ -1,17 +1,8 @@
-# Ignorar todo por defecto excepto carpetas y archivos fuente principales (.c / .h)
+# Ignorar todo por defecto (ejecutables, .txt de partidas/rankings, etc.)
+# excepto carpetas y archivos fuente principales (.c / .h)
 *
 !*/
 !*.c
 !*.h
 !.gitignore
 !README.md
-
-# Ignorar carpetas de configuración y carpetas secundarias
-.vscode/
-Comentados/
-Parcial/
-
-# Ignorar archivos duplicados o secundarios específicos
-*.c.c
-TEMA 3/arduinoTP3.c
-TEMA 5/main5.c
